@@ -24,7 +24,7 @@ function showPosition(position) {
 		}
 	}
 	
-	nearbyInformation = "<span style='vertical-align: middle;'>鄰近車站: </span><button class='btnMtrLine' onclick='schQuery(\"" + stopId + "\");'>" + stop + "</button>";
+	nearbyInformation = "<span style='vertical-align: middle;'>鄰近: </span><button class='btnMtrLine' onclick='schQuery(\"" + stopId + "\");'>" + stop + "</button>";
 	if (document.getElementById("routeList").style.display != "none"){
 		document.getElementById("heading").innerHTML = nearbyInformation;
 	}
@@ -295,4 +295,12 @@ function mtrLineName(code) {
 		default:
 			return "迪士尼線";
 	}
+}
+
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
 }
