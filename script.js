@@ -34,16 +34,16 @@ function showError(error) {
 	let output;
 	switch(error.code) {
 		case error.PERMISSION_DENIED:
-			output = "鄰近車站: <span style='color: red;'>請允許GPS</span>";
+			output = "鄰近: <span style='color: red;'>請允許GPS</span>";
 			break;
 		case error.POSITION_UNAVAILABLE:
-			output = "鄰近車站: <span style='color: red;'>請開啟GPS</span>";
+			output = "鄰近: <span style='color: red;'>請開啟GPS</span>";
 			break;
 		case error.TIMEOUT:
-			output = "鄰近車站: <span style='color: red;'>Timeout Error</span>";
+			output = "鄰近: <span style='color: red;'>Timeout Error</span>";
 			break;
 		case error.UNKNOWN_ERROR:
-			output = "鄰近車站: <span style='color: red;'>Unknown Error</span>";
+			output = "鄰近: <span style='color: red;'>Unknown Error</span>";
 			break;
 	}
 	if (document.getElementById("routeList").style.display != "none"){
