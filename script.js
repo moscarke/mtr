@@ -118,9 +118,7 @@ function depPlace(line){
 			tr.append(stopName);
 			tbody.append(tr);
 
-			start = true;
 			sequence++;
-			continue;
 		}
 	}
 	
