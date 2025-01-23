@@ -92,6 +92,8 @@ function depPlace(line){
 	// nearbyInformation = document.getElementById("heading").innerHTML;
 	let sequence = 1;
 	document.getElementById("routeList").style.display = "none";
+	document.getElementById("backBtn").style.display = "";
+	document.getElementById("sidebar").style.display = "none";
 	const tbody = document.querySelector("#stationTable tbody");
 	
 	for (let i = 0; i < response.length; i++){
@@ -274,11 +276,13 @@ function getCoords() {
 
 function hptoHome(){
 	clearInterval(getTimeInterval);
+	document.getElementById("backBtn").style.display = "none";
+	document.getElementById("sidebar").style.display = "";
 	document.getElementById("heading").textContent = "港鐵抵站時間";
-	document.getElementById("etaList").innerHTML = "";
+	// document.getElementById("etaList").innerHTML = "";
 	document.getElementById("stationList").style.display = "none";
 	document.getElementById("stationTable").innerHTML = "<tbody><tr><td></td><td><strong>港鐵站</strong></td></tr></tbody>";
-	document.getElementById("etaList").style.display = "";
+	// document.getElementById("etaList").style.display = "";
 	document.getElementById("loading").style.display = "none";
 	document.getElementById("routeList").style.display = "";
 }
