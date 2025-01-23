@@ -2,56 +2,56 @@ const response = [{"name":"博覽館","line":"AEL","code":"AWE","lat":22.3220939
 const appScriptUrl = "https://script.google.com/macros/s/AKfycbyerovyJhwPACBq_7Ri0tEei25wm8BhCJ7l-UTkdyGHjWu4n8ZrzaqzLhH5e6M6nNPh0A/exec";
 let nearbyInformation, getTimeInterval;
 
-if (navigator.geolocation) {
-	navigator.geolocation.watchPosition(showPosition, showError, {enableHighAccuracy: true});
-} else {
-	document.getElementById("heading").innerHTML = "";
-}
+// if (navigator.geolocation) {
+// 	navigator.geolocation.watchPosition(showPosition, showError, {enableHighAccuracy: true});
+// } else {
+// 	document.getElementById("heading").innerHTML = "";
+// }
 
-function showPosition(position) {
-	let lat = position.coords.latitude, lng = position.coords.longitude, accuracy = position.coords.accuracy, y = "<div class='centerDiv'>", note = "";
-	let shortestDistance = getDistanceFromLatLonInKm(lat, lng, parseFloat(response[0]["lat"]), parseFloat(response[0]["long"])), distance, stop, stopId;
+// function showPosition(position) {
+// 	let lat = position.coords.latitude, lng = position.coords.longitude, accuracy = position.coords.accuracy, y = "<div class='centerDiv'>", note = "";
+// 	let shortestDistance = getDistanceFromLatLonInKm(lat, lng, parseFloat(response[0]["lat"]), parseFloat(response[0]["long"])), distance, stop, stopId;
 	
-	console.log(lat + ", " + lng);
-	markdown("MTR-Info", lat, lng, accuracy);
+// 	console.log(lat + ", " + lng);
+// 	markdown("MTR-Info", lat, lng, accuracy);
 	
-	for (let i = 0; i < response.length; i++){
-		distance = getDistanceFromLatLonInKm(lat, lng, parseFloat(response[i]["lat"]), parseFloat(response[i]["long"]));
-		if (distance < shortestDistance){
-			stop = response[i]["name"];
-			stopId = response[i]["code"];
-			shortestDistance = distance;
-		}
-	}
+// 	for (let i = 0; i < response.length; i++){
+// 		distance = getDistanceFromLatLonInKm(lat, lng, parseFloat(response[i]["lat"]), parseFloat(response[i]["long"]));
+// 		if (distance < shortestDistance){
+// 			stop = response[i]["name"];
+// 			stopId = response[i]["code"];
+// 			shortestDistance = distance;
+// 		}
+// 	}
 	
-	nearbyInformation = "<span style='vertical-align: middle;'>鄰近: </span><button class='btnMtrLine' onclick='schQuery(\"" + stopId + "\");'>" + stop + "</button>";
-	if (document.getElementById("routeList").style.display != "none"){
-		document.getElementById("heading").innerHTML = nearbyInformation;
-	}
-}
+// 	nearbyInformation = "<span style='vertical-align: middle;'>鄰近: </span><button class='btnMtrLine' onclick='schQuery(\"" + stopId + "\");'>" + stop + "</button>";
+// 	if (document.getElementById("routeList").style.display != "none"){
+// 		document.getElementById("heading").innerHTML = nearbyInformation;
+// 	}
+// }
 
-function showError(error) {
-	let output;
-	switch(error.code) {
-		case error.PERMISSION_DENIED:
-			output = "鄰近: <span style='color: red;'>請允許GPS</span>";
-			break;
-		case error.POSITION_UNAVAILABLE:
-			output = "鄰近: <span style='color: red;'>請開啟GPS</span>";
-			break;
-		case error.TIMEOUT:
-			output = "鄰近: <span style='color: red;'>Timeout Error</span>";
-			break;
-		case error.UNKNOWN_ERROR:
-			output = "鄰近: <span style='color: red;'>Unknown Error</span>";
-			break;
-	}
-	if (document.getElementById("routeList").style.display != "none"){
-		document.getElementById("heading").innerHTML = output;
-	}
-	nearbyInformation = output;
-	markdown("MTR-Info", "", "Error: ", error.message);
-}
+// function showError(error) {
+// 	let output;
+// 	switch(error.code) {
+// 		case error.PERMISSION_DENIED:
+// 			output = "鄰近: <span style='color: red;'>請允許GPS</span>";
+// 			break;
+// 		case error.POSITION_UNAVAILABLE:
+// 			output = "鄰近: <span style='color: red;'>請開啟GPS</span>";
+// 			break;
+// 		case error.TIMEOUT:
+// 			output = "鄰近: <span style='color: red;'>Timeout Error</span>";
+// 			break;
+// 		case error.UNKNOWN_ERROR:
+// 			output = "鄰近: <span style='color: red;'>Unknown Error</span>";
+// 			break;
+// 	}
+// 	if (document.getElementById("routeList").style.display != "none"){
+// 		document.getElementById("heading").innerHTML = output;
+// 	}
+// 	nearbyInformation = output;
+// 	markdown("MTR-Info", "", "Error: ", error.message);
+// }
 
 async function markdown(description, latitude, longitude, accuracy){
 	const xhttpr = new XMLHttpRequest(), agent = window.navigator.userAgent, platform = window.navigator.platform, ipAddress = await getIp(), userUrl = window.location.href;
@@ -89,125 +89,145 @@ function deg2rad(deg) {
 }
 
 function depPlace(line){
-	nearbyInformation = document.getElementById("heading").innerHTML;
-	let start, x = "<table class='timetable' id='" + line + "Div'><tr><td></td><td>港鐵站</td></tr>", sequence = 1;
+	// nearbyInformation = document.getElementById("heading").innerHTML;
+	let sequence = 1;
 	document.getElementById("routeList").style.display = "none";
+	const tbody = document.querySelector("#stationTable tbody");
 	
 	for (let i = 0; i < response.length; i++){
 		if (response[i]["line"] == line){
+			let tr = document.createElement("tr");
+			let number = document.createElement("td");
+			let stopName = document.createElement("td");
+			let button = document.createElement("button");
+			let eta = document.createElement("div");
+			let num = sequence-1;
+			
+			number.textContent = sequence;
+			button.className = "btnEta";
+			button.style = "text-align: left";
+			button.onclick = function (){schQuery(response[i]["code"], response[i]["line"], num)};
+			button.textContent = response[i]["name"];
+			eta.id = (num).toString();
+			eta.style = "white-space: pre-wrap";
+
+			
+			stopName.append(button);
+			stopName.append(eta);
+			tr.append(number);
+			tr.append(stopName);
+			tbody.append(tr);
+
 			start = true;
-			x += "<tr><td>" + sequence + "</td><td><button class='btnEta' style='text-align: left;' onclick='schQuery(\"" + response[i]["code"] + "\",\"" + response[i]["line"] + "\");'>" + response[i]["name"] + "</button></td></tr>";
+			// x += "<tr><td>" + sequence + "</td><td><button class='btnEta' style='text-align: left;' onclick='schQuery(\"" + response[i]["code"] + "\",\"" + response[i]["line"] + "\");'>" + response[i]["name"] + "</button></td></tr>";
 			sequence++;
 			continue;
 		}
-		if (start){
-			x += "</table>";
-			break;
-		}
+		// if (start){
+		// 	x += "</table>";
+		// 	break;
+		// }
 	}
 	
-	document.getElementById("stationList").innerHTML = x;
+	// document.getElementById("stationList").innerHTML = x;
 	document.getElementById("heading").innerHTML = mtrLineName(line);
+	document.getElementById("stationList").style.display = "block";
 }
 
-function schQuery(stopId, line, refresh){
-	let distance, allLine = [], apiReceived = 0, x = "", y = "<div class='centerDiv' id='routeBtn'>", note = "";
+function schQuery(stopId, line, sequence){
+	let note = "", count = 0;
+	const eta = [];
+	let div = document.getElementById(sequence);
+
+	for (let i = 0; i < response.length; i++){
+		if (response[i]["line"] == line){
+			count++
+		}
+	}
+
+	for (let i = 0; i < count; i++){
+		let div = document.getElementById(i);	
+		div.innerHTML = "";
+	}
 	
 	document.getElementById("routeList").style.display = "none";
-	document.getElementById("stationList").style.display = "none";
-	document.getElementById("loading").style.display = "block";
 	
 	markdown("MTR-Info: ", line, stopId, nearbyInformation);
 
-	for (let i = 0; i < response.length; i++){
-		if (stopId == response[i]["code"]){
-			allLine.push({line: response[i]["line"], sta: response[i]["code"], name: response[i]["name"]});
-		}
-	}
-	//special case for Racecourse station because it's not in the csv of MTR routes
-	if (stopId == "RAC"){
-		allLine.push({line: "EAL", sta: "RAC", name: "馬場"});
-	}
-	
-	for (let i = 0; i < allLine.length; i++){
-		const url = "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=" + allLine[i]["line"] + "&sta=" + allLine[i]["sta"];
-		const xhttpr = new XMLHttpRequest();
-		let lineStation = allLine[i]["line"] + "-" + allLine[i]["sta"], destination = [], chunk = "", etaTime, currentTime = new Date();
-		xhttpr.open("GET", url, true);
+	const url = "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=" + line + "&sta=" + stopId;
+	const xhttpr = new XMLHttpRequest();
+	let lineStation = line + "-" + stopId, destination = [], chunk = "", etaTime, currentTime = new Date();
+	xhttpr.open("GET", url, true);
 
-		xhttpr.send();
+	xhttpr.send();
 
-		xhttpr.onload = () => {
-			if (xhttpr.status == 200){
-				raw = JSON.parse(xhttpr.response);
-				apiReceived++;
-				if (raw["status"] == 0){
-					x += "<table id='" + allLine[i]["line"] + "' class='timetable mtrTable' style='display: none'><tr><td>Error: " + raw["message"] + "</td></tr></table>";
-				} else if (raw["curr_time"] == "-"){
-					x += "<table id='" + allLine[i]["line"] + "' class='timetable mtrTable' style='display: none'><tr><td>Error: Status temporarily not available. (2)</td></tr></table>";
-				} else if (raw["data"][lineStation]["UP"] == "" && raw["data"][lineStation]["DOWN"] == "") {
-					x += "<table id='" + allLine[i]["line"] + "' class='timetable mtrTable' style='display: none'><tr><td>尾班車已開出</td></tr></table>";
-				} else {
-					list = raw["data"][lineStation];
-					x = x + "<table id='" + allLine[i]["line"] + "' class='timetable mtrTable' style='display: none'><tr><td><strong>抵站時間</strong></td><td><strong>終點站</strong></td><td><strong>月台</strong></td></tr>";
-					if (list["UP"] != null){
-						for (let j = 0; j < list["UP"].length; j++){
-							note = "";
-							if (allLine[i]["line"] == "EAL"){
-								if (list["UP"][j]["route"] == "RAC"){
-									note = "<span style='font-size: 75%'>經馬場</span>";
-								}
-							}
-							etaTime = new Date(list["UP"][j]["time"]);
-							etaTime = etaTime.toLocaleTimeString('en-HK', {hourCycle: 'h23'});
-							chunk += "<tr><td>" + etaTime + "</td><td>" + response[response.map(e => e.code).indexOf(list["UP"][j]["dest"])]["name"] + note + "</td><td>" + list["UP"][j]["plat"] + "</td></tr>";
-							destination.push(response[response.map(e => e.code).indexOf(list["UP"][j]["dest"])]["name"]);
-						}
-						destination = [...new Set(destination)];
-						x = x + "<tr><td colspan='3' style='background-color: #339933;'>往： " + destination.join("/") + "</td></tr>" + chunk;
-					}
-					chunk = "", destination = [];
-					if (list["DOWN"] != null){
-						for (let j = 0; j < list["DOWN"].length; j++){
-							note = "";
-							if (allLine[i]["line"] == "EAL"){
-								if (list["DOWN"][j]["route"] == "RAC"){
-									note = "<span style='font-size: 75%'>經馬場</span>";
-								}
-							}
-							etaTime = new Date(list["DOWN"][j]["time"]);
-							etaTime = etaTime.toLocaleTimeString('en-HK', {hourCycle: 'h23'});
-							chunk += "<tr><td>" + etaTime + "</td><td>" + response[response.map(e => e.code).indexOf(list["DOWN"][j]["dest"])]["name"] + note + "</td><td>" + list["DOWN"][j]["plat"] + "</td></tr>";
-							destination.push(response[response.map(e => e.code).indexOf(list["DOWN"][j]["dest"])]["name"]);
-						}
-						destination = [...new Set(destination)];
-						x = x + "<tr><td colspan='3' style='background-color: #339933;'>往： " + destination.join("/") + "</td></tr>" + chunk;
-					}
-					x = x + "</table>";
-				}
-				if (refresh){
-					y = "<div class='centerDiv' id='routeBtn'>" + document.getElementById("routeBtn").innerHTML;
-				} else {
-					y += "<button class='btnMtrLine' id='btn" + allLine[i]["line"] + "' onclick='changeTable(\"" + allLine[i]["line"] + "\")'>" + mtrLineName(allLine[i]["line"]) + "</button>";
-				}
-				let z = '<div style="display: flex;"><div style="flex: 1;text-align: left;"><p style="margin: 2px;">現在時間</p><p style="margin: 2px;" id="currTime">' + currentTime.toLocaleTimeString('en-HK', {hourCycle: 'h23'}) + '</p></div><div style="flex: 1;text-align: right;"><p style="margin: 2px;">更新時間</p><p style="margin: 2px;">' + currentTime.toLocaleTimeString('en-HK', {hourCycle: 'h23'}) + '</p></div><img src="images/refresh.png" style="width: 32px;height: 32px;text-align: right;margin: 6px 0px;" onclick="refreshSearch(\'' + stopId + '\')"></div>';
-				if (apiReceived == allLine.length){
-					document.getElementById("heading").innerText = allLine[0]["name"] + "站";
-					line = line || allLine[0]["line"];
-					document.getElementById("etaList").innerHTML = y + "</div>" + z + x;
-					clearInterval(getTimeInterval);
-					getTimeInterval = setInterval(changeCurrentTime, 1000);
-					document.getElementById(line).style.display = "";
-					document.getElementById("btn" + line).style["background-color"] = "#006B00";
-					document.getElementById("loading").style.display = "none";
-				}
+	xhttpr.onload = () => {
+		if (xhttpr.status == 200){
+			raw = JSON.parse(xhttpr.response);
+			if (raw["status"] == 0 || raw["curr_time"] == "-"){
+				
+			} else if (raw["data"][lineStation]["UP"] == "" && raw["data"][lineStation]["DOWN"] == "") {
+				eta.push({dest:"", time: new Date(), plat:"0", remark:"尾班車已開出"})
 			} else {
-				apiReceived++;
-				//idk do sth
+				list = raw["data"][lineStation];
+				if (list["UP"] != null){
+					for (let j = 0; j < list["UP"].length; j++){
+						note = "";
+						if (line == "EAL"){
+							if (list["UP"][j]["route"] == "RAC"){
+								note = "經馬場";
+							}
+						}
+						eta.push({dest: response[response.map(e => e.code).indexOf(list["UP"][j]["dest"])]["name"], time: list["UP"][j]["time"], plat: list["UP"][j]["plat"], remark: note})
+					}
+				}
+				if (list["DOWN"] != null){
+					for (let j = 0; j < list["DOWN"].length; j++){
+						note = "";
+						if (line == "EAL"){
+							if (list["DOWN"][j]["route"] == "RAC"){
+								note = "經馬場";
+							}
+						}
+						eta.push({dest: response[response.map(e => e.code).indexOf(list["DOWN"][j]["dest"])]["name"], time: list["DOWN"][j]["time"], plat: list["DOWN"][j]["plat"], remark: note})
+					}
+				}
 			}
+			outputEta(eta, div);
+		} else {
+			//idk do sth
 		}
 	}
-	console.log(allLine);
+}
+
+function outputEta(eta, div){
+	eta.sort(function (a, b) {
+		return a.time.localeCompare(b.time);
+	});
+
+	for (let i = 0; i < eta.length; i++){
+		let etaStamp = new Date(eta[i].time);
+		let currentTime = new Date()
+		etaStamp = (etaStamp.getTime() - currentTime.getTime()) / 60000;
+		etaStamp = Math.ceil(etaStamp);
+		if (etaStamp <= 0){
+			etaStamp = 1;
+		}
+		if (eta[i].remark == null){
+			eta[i].remark = "";
+		}
+		
+		let row = document.createElement("span");
+		row.style = "font-size: 80%"
+		let time = etaStamp.toString() + "分鐘";
+		row.textContent = time + " " + eta[i].dest + " " + eta[i].remark + " " + eta[i].plat + "號月台";
+		
+		row.appendChild(document.createElement("br"));
+		div.appendChild(row);
+	}
+	if (eta.length == 0){
+		div.innerHTML = "<span>未有班次資料</span>";
+	}
 }
 
 function changeTable (line){
@@ -263,10 +283,10 @@ function getCoords() {
 
 function hptoHome(){
 	clearInterval(getTimeInterval);
-	document.getElementById("heading").innerHTML = nearbyInformation;
-	document.getElementById("stationList").innerHTML = "";
+	document.getElementById("heading").textContent = "港鐵抵站時間";
 	document.getElementById("etaList").innerHTML = "";
-	document.getElementById("stationList").style.display = "";
+	document.getElementById("stationList").style.display = "none";
+	document.getElementById("stationTable").innerHTML = "<tbody><tr><td></td><td><strong>港鐵站</strong></td></tr></tbody>";
 	document.getElementById("etaList").style.display = "";
 	document.getElementById("loading").style.display = "none";
 	document.getElementById("routeList").style.display = "";

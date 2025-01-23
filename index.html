@@ -24,9 +24,7 @@
 		<div style="position: absolute;">
 			<span style="font-size:30px;cursor:pointer;" onclick="openNav()">&#9776;</span>
 		</div>
-		<h1 id="heading" style="margin: 10px; text-align:center; display: block ruby;">
-			<span style="vertical-align: middle;">鄰近: <span style='color: brown;'>載入中</span></span>
-		</h1>
+		<h1 id="heading" style="margin: 10px; text-align:center; display: block ruby;">港鐵抵站時間</h1>
 
     <!-- Page ONE -->
 		<div id="routeList">
@@ -51,7 +49,19 @@
 			</div>
 		</div>
 
-		<div id="stationList"></div>
+		<!-- <div id="stationList"></div> -->
+
+		<div id="stationList" style="display: none;">
+			<table id="stationTable" class="timetable">
+			  <tbody>
+				  <tr>
+					  <td></td>
+					  <td><strong>港鐵站</strong></td>
+				  </tr>
+			  </tbody>
+			</table>
+		  </div>
+		
 		
 		<div id="etaList"></div>
 
