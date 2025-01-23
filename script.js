@@ -119,14 +119,9 @@ function depPlace(line){
 			tbody.append(tr);
 
 			start = true;
-			// x += "<tr><td>" + sequence + "</td><td><button class='btnEta' style='text-align: left;' onclick='schQuery(\"" + response[i]["code"] + "\",\"" + response[i]["line"] + "\");'>" + response[i]["name"] + "</button></td></tr>";
 			sequence++;
 			continue;
 		}
-		// if (start){
-		// 	x += "</table>";
-		// 	break;
-		// }
 	}
 	
 	// document.getElementById("stationList").innerHTML = x;
