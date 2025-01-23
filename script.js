@@ -111,7 +111,6 @@ function depPlace(line){
 			eta.id = (num).toString();
 			eta.style = "white-space: pre-wrap";
 
-			
 			stopName.append(button);
 			stopName.append(eta);
 			tr.append(number);
@@ -128,9 +127,8 @@ function depPlace(line){
 }
 
 function schQuery(stopId, line, sequence){
-	let note = "", count = 0;
+	let note = "", count = 0, div = document.getElementById(sequence);
 	const eta = [];
-	let div = document.getElementById(sequence);
 
 	for (let i = 0; i < response.length; i++){
 		if (response[i]["line"] == line){
